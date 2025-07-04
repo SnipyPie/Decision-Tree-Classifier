@@ -1,0 +1,68 @@
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv("bank.csv",sep=';')
+
+# Display the first 5 rows
+df.head()
+#Check data types and basic info
+df.info()
+
+#Check for missing/null values
+print("\nMissing Values:\n", df.isnull().sum())
+
+#Check unique values in the target column
+print("\nTarget Variable Distribution:\n", df['y'].value_counts())
+# Convert categorical columns to dummy variables
+df_encoded = pd.get_dummies(df, drop_first=True)
+
+# Display the first 5 rows of the encoded dataset
+df_encoded.head()
+from sklearn.model_selection import train_test_split
+
+#Separate features and target
+X = df_encoded.drop('y_yes', axis=1)
+y = df_encoded['y_yes']
+
+#Split into train and test sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Display shape of splits
+print("Training features shape:", X_train.shape)
+print("Test features shape:", X_test.shape)
+print("Training labels shape:", y_train.shape)
+print("Test labels shape:", y_test.shape)
+from sklearn.tree import DecisionTreeClassifier
+
+# Re-train with max_depth
+dt_model = DecisionTreeClassifier(max_depth=3, random_state=42)
+dt_model.fit(X_train, y_train)
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+#Predict on the test set
+y_pred = dt_model.predict(X_test)
+
+#Accuracy
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+#Classification report
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+#Confusion matrix
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+import os
+os.environ["PATH"] += os.pathsep + r"C:\Program Files\Graphviz\bin"
+
+from sklearn.tree import export_graphviz
+import graphviz
+
+dot_data = export_graphviz(dt_model, out_file=None,
+                           feature_names=X.columns,
+                           class_names=["no", "yes"],
+                           filled=True, rounded=True,
+                           special_characters=True)
+
+graph = graphviz.Source(dot_data)
+graph.render("compact_decision_tree", format='png', cleanup=True)
+graph
+graph.render("compact_decision_tree", format='png', cleanup=True)
