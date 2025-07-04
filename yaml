@@ -1,0 +1,33 @@
+- Model performs well for identifying non-buyers. Performance for buyers (`True`) can be improved with more balanced data or pruning.
+
+---
+
+## 🌱 Tree Visualization
+
+The decision tree was exported and rendered using `Graphviz`. To avoid clutter:
+- `max_depth` was limited
+- `min_samples_split` was adjusted to simplify branches
+
+---
+
+## 🧰 Libraries Used
+
+- `pandas`
+- `numpy`
+- `scikit-learn`
+- `matplotlib`
+- `graphviz`
+
+---
+
+## ▶️ Running the Project
+
+```python
+# Install requirements
+pip install pandas numpy scikit-learn matplotlib graphviz
+
+# Optional: Install Graphviz system package
+# Windows users: Download from https://graphviz.org/download/
+
+# Train and visualize model
+python decision_tree_classifier.py
